@@ -53,4 +53,11 @@ winner_str: .asciz "You won!\n"
 draw_str: .asciz "Draw!\n"
 get_answer_str: .asciz "Waiting for opponent's move...\n"
 str_buffer: .space 128
-bord: .asciz "|-------|\n|0000000|\n|0000000|\n|0000000|\n|0000000|\n|0000000|\n|0000000|\n|-------|\n"
+bord: .asciz "┌---------------------------┐\n
+              | O | O | O | O | O | O | O |\n
+              | O | O | O | O | O | O | O |\n
+              | O | O | O | O | O | O | O |\n
+              | O | O | O | O | O | O | O |\n
+              | O | O | O | O | O | O | O |\n
+              | O | O | O | O | O | O | O |\n
+              └---------------------------┘\n"
