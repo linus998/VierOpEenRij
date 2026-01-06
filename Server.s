@@ -28,36 +28,52 @@ main:
 
     @ print bord
     @----------------------------------------------------------------------------------------------
-print_bord:   
+print_bord:
     ldr     R0, =bord_top
     bl      printf
 
-print_line_speelveld:
-    push    {r4, lr}        @ preserve callee-saved + align stack
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ R2 is line of col counter
+@ R3 is adress van cel inhoud in de aray
+@ R0 is formatted string
+@ R1 is inhoud cel
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-    ldr     r0, =bord_speel_lijn
-    sub     sp, sp, #16     @ space for 4 more ints (4 × 4 bytes)
+    mov R2, #0          @line counter
+    ldr R3, =lijst_van_waarden @adress couter
 
-    mov     r4, #4
-    str     r4, [sp, #0]    @ %d #4
-    mov     r4, #5
-    str     r4, [sp, #4]    @ %d #5
-    mov     r4, #6
-    str     r4, [sp, #8]    @ %d #6
-    mov     r4, #7
-    str     r4, [sp, #12]   @ %d #7
-    mov     r4, []
-    str     r4, [sp, #16]    @ %d #4
-    mov     r4, []
-    str     r4, [sp, #20]    @ %d #4
-    mov     r4, []
-    str     r4, [sp, #24]    @ %d #4
+print_6_lines:
 
-    bl      printf
+    add R2, R2, #1
+    cmp R2, #7
+    beq bord_greprint
 
-    add     sp, sp, #16     @ clean up stack
-    pop     {r4, lr}
-    bx      lr
+    str R2, =line_counter
+
+    mov R2, #0          @ col counter
+
+print_7_cols:
+    add R2, R2, #1
+    cmp R2, #8
+    beq next_line
+
+    ldr R0, =bord_cell
+    mov R1, [R3]
+    bl printf
+
+    add R3, R3, #4 
+
+next_line:
+    ldr R0, =bord_border_right
+    str R2, =col_counter
+    ldr R2, =line_counter
+    b print_6_lines
+
+bord_greprint:
+
+
+
+
 
 exit:
     mov        R0, #0            @ return code 0
@@ -74,9 +90,17 @@ high:    .asciz    "1"
 pin_val: .asciz    "?"
 
 bord_top: .asciz "┌---------------------------┐\n"
-bord_speel_lijn: .asciz "| %d | %d | %d | %d | %d | %d | %d |\n"
+bord_cell: .asciz "| %d "
+bord_border_right: .asciz "|\n"
 bord_bottom: .asciz "└---------------------------┘\n"
 input_from_user: .asciz "Welke lijn wil je invoegen: \n"
 
-
-lijst_van_waarden: .word 168
+lijst_van_waarden: .word 0, 0, 0, 0, 0, 0, 0
+                   .word 0, 0, 0, 0, 0, 0, 0
+                   .word 0, 0, 0, 0, 0, 0, 0
+                   .word 0, 0, 0, 0, 0, 0, 0
+                   .word 0, 0, 0, 0, 0, 0, 0
+                   .word 0, 0, 0, 0, 0, 0, 0
+                   
+line_counter: .space 4
+col_counter: .space 4
