@@ -1,128 +1,19 @@
-linusbeheydt
-linusbeheydt
-Online
-
-linusbeheydt — 09:02
-https://github.com/linus998/Projectdag2_CA.git
-GitHub
-linus998/Projectdag2_CA
-Contribute to linus998/Projectdag2_CA development by creating an account on GitHub.
-linus998/Projectdag2_CA
-ELPepe — 11:52
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ IMPORTS
-@ =============================================================================================
-.extern printf
-.extern scanf
-.include "Rx_Tx.s"
-Expand
-message.txt
-4 KB
-linusbeheydt — 12:35
-https://github.com/linus998/VierOpEenRij.git
-GitHub
-linus998/VierOpEenRij
-Contribute to linus998/VierOpEenRij development by creating an account on GitHub.
-linus998/VierOpEenRij
-ELPepe — 12:56
-bord: asciz. "┌---------------------------┐\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              └---------------------------┘\n"
-"┌---------------------------┐\n| %s | %s | %s | %s | %s | %s | %s |\n| %s | %s | %s | %s | %s | %s | %s |\n| %s | %s | %s | %s | %s | %s | %s |\n| %s | %s | %s | %s | %s | %s | %s |\n| %s | %s | %s | %s | %s | %s | %s |\n| %s | %s | %s | %s | %s | %s | %s |\n└---------------------------┘\n"
-ELPepe — 13:12
-@ IMPORTS
-@ =============================================================================================
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 .extern printf
 .extern scanf
 .include "Rx_Tx.s"
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ TEXT
-@ =============================================================================================
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 .text
 .global main
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ MAIN
-@ =============================================================================================
-main:
-    GPIOExport    pin24                    @ config GPIO24
-    setSleepTime    #0, #100000000        @ 0.1 sec
-    doSleep                                @ sleep
-    GPIODirectionOut  pin24                @ GPIO24 is output
-
-    GPIOExport    pin23                    @ config GPIO23
-    setSleepTime    #0, #100000000        @ 0.1 sec
-    doSleep                                @ sleep
-    GPIODirectionIn  pin23                @ GPIO23 is input
-
-    GPIOWrite    pin24, high                @ Tx high
-    setSleepTime    #0, #100000000        @ 0.1 sec
-    doSleep                                @ sleep
-
-    @ print bord
-    @----------------------------------------------------------------------------------------------
-print_bord:
-    ldr     R0, =bord_top
-    bl      printf
-
-print_line_speelveld:
-    ldr     R0, =bord_speel_lijn
-    mov     R1, #0
-    mov        R2, #0
-    mov     R3, #0
-    mov     R4, #0
-    mov        R5, #0
-    mov     R6, #0
-    mov     R7, #0
-    bl      printf
-
-exit:
-    mov        R0, #0            @ return code 0
-    mov        R7, #1            @ exit
-    svc        0                @ call Linux
-
-@ DATA
-@ =================================================================================================
-.data
-pin23:    .asciz    "23"
-pin24:    .asciz    "24"
-low:    .asciz    "0"
-high:    .asciz    "1"
-pin_val: .asciz    "?"
-
-bord_top: .asciz "┌---------------------------┐\n"
-bord_speel_lijn: .asciz "| %d | %d | %d | %d | %d | %d | %d |\n"
-bord_bottom: .asciz "└---------------------------┘\n"
-input_from_user: .asciz "Welke lijn wil je invoegen: \n"
-ELPepe — 14:38
-@ IMPORTS
-@ =============================================================================================
-.extern printf
-.extern scanf
-.include "Rx_Tx.s"
-Expand
-message.txt
-4 KB
-﻿
-ELPepe
-el_pepe_1
- 
-@ IMPORTS
-@ =============================================================================================
-.extern printf
-.extern scanf
-.include "Rx_Tx.s"
-
-@ TEXT
-@ =============================================================================================
-.text
-.global main
-
-@ MAIN
-@ =============================================================================================
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 main:
     GPIOExport    pin24                    @ config GPIO24
     setSleepTime    #0, #100000000        @ 0.1 sec
@@ -199,42 +90,56 @@ bord_greprint:
 @ elias zijn deel
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 drop_piece:
+    ldr R3, =lijst_van_waarden
+    add R3, R3, #168
+
     mov R2, #2
     mov R1, #1
     @R2 = column to drop piece
     @R1 = speler nr
 
-    ldr R0, =bord
+    ldr R0, =lijst_van_waarden
 
-    mov R2, R2, lsl #2
+    lsl R2, R2, #2
     add R0, R0, R2
+
     ldr R2, [R0]
     cmp R2, #0
-    beq no_col_space
+    bne no_col_space
 
 loop:
+
     add R0, R0, #28
     ldr R2, [R0]
+    cmp R0, R3
+    bgt space_found
     cmp R2, #0
-    beq space_found
+    bne space_found
     b   loop
 
 no_col_space:
-    @geef een error message
+    ldr R0, =error_message 
+    bl printf
+    b exit
 
 space_found:
     sub R0, R0, #28
     str R1, [R0]
+    b print_bord
+    b @check voor rij
+
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+@exit
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 exit:
     mov        R0, #0            @ return code 0
     mov        R7, #1            @ exit
     svc        0                @ call Linux
 
-@ DATA
-@ =================================================================================================
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@data
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 .data
 pin23:    .asciz    "23"
 pin24:    .asciz    "24"
@@ -247,7 +152,7 @@ bord_cell: .asciz "| %d | %d | %d | %d | %d | %d | %d |\n"
 bord_border_right: .asciz "|\n"
 bord_bottom: .asciz "└---------------------------┘\n"
 input_from_user: .asciz "Welke lijn wil je invoegen: \n"
-
+error_message: .asciz "geen plaats meer \n"
 lijst_van_waarden: .word 0, 0, 0, 0, 0, 0, 0
                    .word 0, 0, 0, 0, 0, 0, 0
                    .word 0, 0, 0, 0, 0, 0, 0
