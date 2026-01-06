@@ -36,10 +36,6 @@ print_line_speelveld:
     push    {r4, lr}        @ preserve callee-saved + align stack
 
     ldr     r0, =bord_speel_lijn
-    mov     r1, #1          @ %d #1
-    mov     r2, #2          @ %d #2
-    mov     r3, #3          @ %d #3
-
     sub     sp, sp, #16     @ space for 4 more ints (4 × 4 bytes)
 
     mov     r4, #4
@@ -50,6 +46,12 @@ print_line_speelveld:
     str     r4, [sp, #8]    @ %d #6
     mov     r4, #7
     str     r4, [sp, #12]   @ %d #7
+    mov     r4, []
+    str     r4, [sp, #16]    @ %d #4
+    mov     r4, []
+    str     r4, [sp, #20]    @ %d #4
+    mov     r4, []
+    str     r4, [sp, #24]    @ %d #4
 
     bl      printf
 
@@ -75,3 +77,6 @@ bord_top: .asciz "┌---------------------------┐\n"
 bord_speel_lijn: .asciz "| %d | %d | %d | %d | %d | %d | %d |\n"
 bord_bottom: .asciz "└---------------------------┘\n"
 input_from_user: .asciz "Welke lijn wil je invoegen: \n"
+
+
+lijst_van_waarden: .word 168
