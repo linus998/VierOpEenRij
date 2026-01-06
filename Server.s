@@ -27,7 +27,14 @@ main:
 	doSleep								@ sleep
 
     @ print bord
-    ldr     R0, =bord
+    @----------------------------------------------------------------------------------------------
+print_bord:   
+    ldr     R0, =bord_top
+    bl      printf
+
+print_line_speelveld:
+    ldr     R0, =bord_speel_lijn    
+    mov     R1, "S"
     bl      printf
 
 exit:
@@ -36,28 +43,15 @@ exit:
 	svc		0				@ call Linux
 
 @ DATA
-@ =============================================================================================
+@ =================================================================================================
 .data
-command: .space 4
 pin23:	.asciz	"23"
 pin24:	.asciz	"24"
 low:	.asciz	"0"
 high:	.asciz	"1"
 pin_val: .asciz	"?"
-f_str_i: .asciz "%d"
-f_str_s: .asciz "%s"
-fout_com: .asciz "fout commando\n"
-give_com: .asciz "Blad(1) Steen(2) Schaar(3) Exit(4) >>"
-loser_str: .asciz "You lost!\n"
-winner_str: .asciz "You won!\n"
-draw_str: .asciz "Draw!\n"
-get_answer_str: .asciz "Waiting for opponent's move...\n"
-str_buffer: .space 128
-bord: .asciz "┌---------------------------┐\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              | O | O | O | O | O | O | O |\n
-              └---------------------------┘\n"
+
+bord_top: .asciz "┌---------------------------┐\n"
+bord_speel_lijn: .asciz "| %s |\n"
+bord_bottom: .asciz "└---------------------------┘\n"
+input_from_user: .asciz "Welke lijn wil je invoegen: \n"
